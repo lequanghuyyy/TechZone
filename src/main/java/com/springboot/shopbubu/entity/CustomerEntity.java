@@ -4,9 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
+@Table(name = "customers")
 public class CustomerEntity  {
 
     @Id
@@ -20,10 +23,13 @@ public class CustomerEntity  {
     @Column(name = "gender")
     private String gender;
 
-    @OneToOne(mappedBy = "member",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private CustomerDetailEntity customerDetail;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "used_id", referencedColumnName = "id")
     private UserEntity userEntity;
+
+    @OneToMany(mappedBy = "customer")
+    private List<OrderEntity> orderEntities;
 }

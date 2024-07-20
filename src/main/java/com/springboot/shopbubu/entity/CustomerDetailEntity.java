@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Setter
@@ -42,4 +43,7 @@ public class CustomerDetailEntity extends AbstractEntity<Long> {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private CustomerEntity customer;
+
+    @OneToMany(mappedBy = "customerDetail")
+    private List<ProductReview> productReviews;
 }

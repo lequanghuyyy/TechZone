@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "products")
 public class ProductEntity extends AbstractEntity<Long> {
 
     @Column(name = "product_code")
@@ -33,5 +35,6 @@ public class ProductEntity extends AbstractEntity<Long> {
     @OneToOne(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ProductDetailEntity productDetail;
 
-
+    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
+    private List<OrderDetailEntity> orderDetails;
 }

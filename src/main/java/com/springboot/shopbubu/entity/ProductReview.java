@@ -1,15 +1,13 @@
 package com.springboot.shopbubu.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "product_reviews")
 public class ProductReview extends AbstractEntity<Long>{
 
     @Column(name = "rating")
@@ -19,10 +17,10 @@ public class ProductReview extends AbstractEntity<Long>{
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private ProductEntity product;
+    @JoinColumn(name = "product_detail_id")
+    private ProductDetailEntity productDetail;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private CustomerEntity customer;
+    private CustomerDetailEntity customerDetail;
 }
