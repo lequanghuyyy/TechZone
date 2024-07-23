@@ -45,5 +45,5 @@ public class CustomerDetailEntity extends AbstractEntity<Long> {
     private CustomerEntity customer;
 
     @OneToMany(mappedBy = "customerDetail")
-    private List<ProductReview> productReviews;
+    private List<ProductReviewEntity> productReviewEntities;
 }

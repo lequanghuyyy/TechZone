@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "product_reviews")
-public class ProductReview extends AbstractEntity<Long>{
+public class ProductReviewEntity extends AbstractEntity<Long>{
 
     @Column(name = "rating")
     private Integer rating;

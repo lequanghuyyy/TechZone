@@ -1,8 +1,16 @@
 package com.springboot.shopbubu.dto;
 
-import lombok.Data;
+import com.springboot.shopbubu.utils.PaymentType;
+import lombok.*;
 
-@Data
+import java.util.Date;
 
-public class OrderDetailDto {
+@Setter@Getter@NoArgsConstructor@AllArgsConstructor
+
+public class OrderDetailDto extends AbstractDto {
+    private OrderDto orderDto;
+    private ProductDto productDto;
+    private int quantity;
+    private Date dateAllocated;
+    private PaymentType paymentType;
 }
