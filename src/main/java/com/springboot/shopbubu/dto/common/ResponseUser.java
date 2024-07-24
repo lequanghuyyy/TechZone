@@ -1,4 +1,4 @@
-package com.springboot.shopbubu.utils;
+package com.springboot.shopbubu.dto.common;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;

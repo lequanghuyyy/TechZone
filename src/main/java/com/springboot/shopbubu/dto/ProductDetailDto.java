@@ -1,6 +1,5 @@
 package com.springboot.shopbubu.dto;
 
-import com.springboot.shopbubu.entity.ProductEntity;
 import lombok.*;
 
 @Setter

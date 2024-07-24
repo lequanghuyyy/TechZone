@@ -4,7 +4,7 @@ import com.springboot.shopbubu.dto.JwtDto;
 import com.springboot.shopbubu.dto.UserDto;
 import com.springboot.shopbubu.repository.UserRepository;
 import com.springboot.shopbubu.service.UserService;
-import com.springboot.shopbubu.utils.ResponseUser;
+import com.springboot.shopbubu.dto.common.ResponseUser;
 import org.springframework.stereotype.Service;
 
 @Service
