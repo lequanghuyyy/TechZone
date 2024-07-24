@@ -16,6 +16,6 @@ public class CustomerDetailDto extends AbstractDto {
     private String phone;
     private String address;
     private String city;
-    private CustomerDto customer;
-    private List<ProductReviewEntity> productReviewEntities;
+//    private CustomerDto customer;
+//    private List<ProductReviewEntity> productReviewEntities;
 }

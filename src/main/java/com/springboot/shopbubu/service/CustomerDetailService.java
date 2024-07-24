@@ -5,5 +5,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface CustomerDetailService {
-    CustomerDetailDto createCustomerDetail(CustomerDetailDto customerDetailDto);
+    CustomerDetailDto create(CustomerDetailDto customerDetailDto);
+    CustomerDetailDto update(CustomerDetailDto customerDetailDto);
+    CustomerDetailDto findById(Long id);
+    CustomerDetailDto findByName(String name);
+    void delete(Long id);
 }
