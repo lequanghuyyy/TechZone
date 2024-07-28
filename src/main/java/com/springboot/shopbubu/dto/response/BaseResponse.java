@@ -1,4 +1,4 @@
-package com.springboot.shopbubu.dto.common;
+package com.springboot.shopbubu.dto.response;
 
 import lombok.Data;
 

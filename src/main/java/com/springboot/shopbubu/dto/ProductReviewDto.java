@@ -10,6 +10,6 @@ import lombok.*;
 public class ProductReviewDto extends AbstractDto{
     private Integer rating;
     private String comment;
-    private ProductDetailDto productDetail;
-    private CustomerDetailDto customerDetail;
+    private Integer productDetailId;
+    private Integer customerDetailId;
 }

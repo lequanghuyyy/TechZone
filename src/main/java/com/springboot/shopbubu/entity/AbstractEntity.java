@@ -16,8 +16,8 @@ public abstract class AbstractEntity<T extends Serializable> implements Serializ
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "")
+    private T id;
 
     @Column(name = "created_at")
     @CreationTimestamp

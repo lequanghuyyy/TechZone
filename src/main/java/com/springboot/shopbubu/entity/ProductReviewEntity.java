@@ -17,10 +17,10 @@ public class ProductReviewEntity extends AbstractEntity<Long>{
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name = "product_detail_id")
+    @JoinColumn(name = "product_id")
     private ProductDetailEntity productDetail;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_detail_id")
     private CustomerDetailEntity customerDetail;
 }

@@ -34,8 +34,8 @@ public class OrderEntity {
     @Column(name = "ship_name", nullable = false)
     private String shipName;
 
-    @Column(name = "ship_address1", nullable = false)
-    private String shipAddress1;
+    @Column(name = "ship_address", nullable = false)
+    private String shipAddress;
 
     @Column(name = "ship_city", nullable = false)
     private String shipCity;
@@ -54,6 +54,13 @@ public class OrderEntity {
     @Column(name = "sum_price", nullable = false, precision = 19, scale = 4)
     private BigDecimal sumPrice;
 
-    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL)
-    private List<OrderDetailEntity> orderDetails;
+    @OneToOne(mappedBy = "orderEntity", cascade = CascadeType.ALL)
+    private OrderDetailEntity orderDetails;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id", nullable = false)
+    private CartEntity cart;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderItemEntity> orderItem;
 }

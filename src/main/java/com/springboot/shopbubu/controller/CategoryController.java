@@ -1,8 +1,8 @@
 package com.springboot.shopbubu.controller;
 
 import com.springboot.shopbubu.dto.CategoryDto;
-import com.springboot.shopbubu.dto.common.BaseResponse;
-import com.springboot.shopbubu.dto.common.ResponseFactory;
+import com.springboot.shopbubu.dto.response.BaseResponse;
+import com.springboot.shopbubu.dto.response.ResponseFactory;
 import com.springboot.shopbubu.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +20,27 @@ public class CategoryController {
     }
     @GetMapping("/findAll")
     public ResponseEntity<BaseResponse<List<CategoryDto>>> findAll() {
-        return ResponseFactory.ok(categoryService.findAll());
+        try {
+           return ResponseFactory.ok(categoryService.findAll());
+        }
+        catch (RuntimeException e) {
+          return ResponseFactory.error();
+        }
+
     }
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<CategoryDto>> create(@RequestBody CategoryDto categoryDto ) {
-        return ResponseFactory.ok(categoryService.create(categoryDto));
+        try { return ResponseFactory.ok(categoryService.create(categoryDto));}
+        catch (RuntimeException e) {
+            return ResponseFactory.error();
+        }
     }
     @PutMapping("/update")
     public ResponseEntity<BaseResponse<CategoryDto>> update(@RequestBody CategoryDto categoryDto ) {
-        return ResponseFactory.ok(categoryService.update(categoryDto));
+         try{ return ResponseFactory.ok(categoryService.update(categoryDto));}
+        catch (RuntimeException e) {
+            return ResponseFactory.error();
+        }
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id){

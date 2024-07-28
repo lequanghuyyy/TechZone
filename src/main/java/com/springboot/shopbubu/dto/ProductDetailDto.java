@@ -12,5 +12,5 @@ public class ProductDetailDto {
     private String description;
     private String isFeatured;
     private String isNew;
-    private ProductDto product;
+    private Integer stockQuantity;
 }

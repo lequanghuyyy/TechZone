@@ -28,8 +28,8 @@ public class CustomerEntity  {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "used_id", referencedColumnName = "id")
-    private UserEntity userEntity;
+    private UserEntity user;
 
     @OneToMany(mappedBy = "customer")
-    private List<OrderEntity> orderEntities;
+    private List<OrderEntity> order;
 }

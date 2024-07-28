@@ -8,7 +8,6 @@ import java.util.Date;
 @Setter@Getter@NoArgsConstructor@AllArgsConstructor
 
 public class OrderDetailDto extends AbstractDto {
-    private OrderDto orderDto;
     private ProductDto productDto;
     private int quantity;
     private Date dateAllocated;

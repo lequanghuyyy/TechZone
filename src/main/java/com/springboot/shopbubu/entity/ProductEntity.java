@@ -29,12 +29,15 @@ public class ProductEntity extends AbstractEntity<Long> {
     private BigDecimal price;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id",referencedColumnName = "id")
     private CategoryEntity category;
 
     @OneToOne(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private ProductDetailEntity productDetail;
 
-    @OneToMany(mappedBy = "productEntity", cascade = CascadeType.ALL)
-    private List<OrderDetailEntity> orderDetails;
+    @OneToMany(mappedBy = "product")
+    private List<OrderItemEntity> orderItem;
+
+    @OneToMany(mappedBy = "product")
+    private List<CartProductEntity> cartProducts;
 }

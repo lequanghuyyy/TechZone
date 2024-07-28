@@ -21,11 +21,10 @@ public class OrderDto {
     private Date orderDate;
     private Date shippedDate;
     private String shipName;
-    private String shipAddress1;
+    private String shipAddress;
     private String shipCity;
     private BigDecimal shippingFee;
-    private PaymentType paymentType;
     private OrderStatus orderStatus;
     private BigDecimal sumPrice;
-    private List<OrderDetailDto> orderDetails;
+    private OrderDetailDto orderDetails;
 }

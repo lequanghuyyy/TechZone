@@ -1,4 +1,4 @@
-package com.springboot.shopbubu.dto.common;
+package com.springboot.shopbubu.dto.response;
 
 
 
@@ -13,7 +13,13 @@ public class ResponseFactory {
         response.setData(data);
         response.setStatus(AppConstant.SUCCESS_CODE);
         response.setDescription("success");
-
         return ResponseEntity.ok(response);
+    }
+    public static <T> ResponseEntity<BaseResponse<T>> error() {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setData(null);
+        response.setStatus(AppConstant.Fail_CODE);
+        response.setDescription("fail");
+        return ResponseEntity.badRequest().body(response);
     }
 }

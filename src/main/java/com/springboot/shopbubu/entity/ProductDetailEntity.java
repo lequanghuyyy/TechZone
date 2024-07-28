@@ -30,8 +30,10 @@ public class ProductDetailEntity {
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductEntity product;
 
-//    @OneToMany(mappedBy = "productDetail")
-//    private List<ProductDetailEntity> productDetails;
+    @Column(name = "stock_quantity")
+    private Integer stockQuantity;
+
+
 
 
 }

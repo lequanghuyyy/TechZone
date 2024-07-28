@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
+@Table(name = "customer_details")
 public class CustomerDetailEntity extends AbstractEntity<Long> {
 
     @Column(name = "description")

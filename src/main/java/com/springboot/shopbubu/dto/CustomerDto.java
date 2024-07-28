@@ -11,7 +11,8 @@ public class CustomerDto {
     private String name;
     private String gender;
     private CustomerDetailDto customerDetail;
-    private UserDto userDto;
-//    private List<OrderDto> orderDtos;
+    private UserDto user;
+    private List<OrderDto> order;
+
 
 }

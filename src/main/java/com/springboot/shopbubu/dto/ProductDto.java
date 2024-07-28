@@ -17,7 +17,6 @@ public class ProductDto extends AbstractDto {
     private String image;
     private Integer numberPurchase;
     private BigDecimal price;
-    private CategoryDto category;
+    private String categoryName;
     private ProductDetailDto productDetail;
-    private List<OrderDetailDto> orderDetails;
 }

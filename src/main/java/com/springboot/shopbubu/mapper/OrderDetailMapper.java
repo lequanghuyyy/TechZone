@@ -13,8 +13,8 @@ public class OrderDetailMapper {
     public OrderDetailMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
-    public OrderDetailDto convertToOrderDetailDto(OrderDetailDto orderDetailDto) {
-        return modelMapper.map(orderDetailDto, OrderDetailDto.class);
+    public OrderDetailDto convertToOrderDetailDto(OrderDetailEntity orderDetailEntity) {
+        return modelMapper.map(orderDetailEntity, OrderDetailDto.class);
     }
     public OrderDetailEntity convertToOrderDetailEntity(OrderDetailDto orderDetailDto) {
         return modelMapper.map(orderDetailDto, OrderDetailEntity.class);

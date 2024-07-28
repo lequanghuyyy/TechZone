@@ -1,22 +1,22 @@
 package com.springboot.shopbubu.service.impl;
 
 import com.springboot.shopbubu.dto.OrderDetailDto;
+import com.springboot.shopbubu.mapper.OrderDetailMapper;
 import com.springboot.shopbubu.repository.OrderDetailRepository;
 import com.springboot.shopbubu.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
+    private final OrderDetailMapper orderDetailMapper;
     @Autowired
-    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository) {
+    public OrderDetailServiceImpl(OrderDetailRepository orderDetailRepository, OrderDetailMapper orderDetailMapper) {
         this.orderDetailRepository = orderDetailRepository;
-    }
-
-    @Override
-    public OrderDetailDto create(OrderDetailDto orderDetailDto) {
-        return null;
+        this.orderDetailMapper = orderDetailMapper;
     }
 
     @Override
@@ -26,6 +26,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public OrderDetailDto findById(Long id) {
-        return null;
+        return orderDetailRepository.findById(id).map(orderDetailMapper::convertToOrderDetailDto).orElseThrow(NoSuchElementException::new);
     }
 }

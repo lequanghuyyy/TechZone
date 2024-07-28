@@ -13,5 +13,5 @@ public class CategoryDto extends AbstractDto {
     private String categoryName;
     private String description;
     private String image;
-//    private List<ProductDto> product;
+    private List<ProductDto> product;
 }
