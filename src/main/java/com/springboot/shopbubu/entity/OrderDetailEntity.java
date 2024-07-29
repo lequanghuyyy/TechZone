@@ -1,6 +1,6 @@
 package com.springboot.shopbubu.entity;
 
-import com.springboot.shopbubu.utils.PaymentType;
+import com.springboot.shopbubu.constant.PaymentType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

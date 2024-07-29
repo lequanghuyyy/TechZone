@@ -23,7 +23,7 @@ public class CustomerEntity  {
     @Column(name = "gender")
     private String gender;
 
-    @OneToOne(mappedBy = "customer",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private CustomerDetailEntity customerDetail;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

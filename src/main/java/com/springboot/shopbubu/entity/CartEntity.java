@@ -1,6 +1,6 @@
 package com.springboot.shopbubu.entity;
 
-import com.springboot.shopbubu.utils.CartStatus;
+import com.springboot.shopbubu.constant.CartStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,10 +1,10 @@
 package com.springboot.shopbubu.dto;
 
-import com.springboot.shopbubu.entity.ProductReviewEntity;
+
 import lombok.*;
 
 import java.util.Date;
-import java.util.List;
+
 
 @Getter@Setter@NoArgsConstructor@AllArgsConstructor
 public class CustomerDetailDto extends AbstractDto {

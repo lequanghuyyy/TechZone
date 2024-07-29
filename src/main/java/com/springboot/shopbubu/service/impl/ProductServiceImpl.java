@@ -2,6 +2,7 @@ package com.springboot.shopbubu.service.impl;
 
 import com.springboot.shopbubu.dto.ProductDto;
 import com.springboot.shopbubu.entity.CategoryEntity;
+import com.springboot.shopbubu.entity.ProductDetailEntity;
 import com.springboot.shopbubu.entity.ProductEntity;
 import com.springboot.shopbubu.mapper.CategoryMapper;
 import com.springboot.shopbubu.mapper.ProductDetailMapper;
@@ -46,9 +47,13 @@ public class ProductServiceImpl implements ProductService {
         }
         CategoryEntity categoryEntity = categoryRepository.findByCategoryName(productDto.getCategoryName());
          ProductEntity productEntity = productMapper.convertToProductEntity(productDto);
+        ProductDetailEntity productDetailEntity = productDetailMapper.convertToProductDetailEntity(productDto.getProductDetail());
          productEntity.setCategory(categoryEntity);
+        productDetailEntity.setProduct(productEntity);
+        productEntity.setProductDetail(productDetailEntity);
          productEntity = productRepository.save(productEntity);
-         productDto.setId(productEntity.getId());
+         productDto = productMapper.convertToProductDto(productEntity);
+         productDto.setCategoryName(categoryEntity.getCategoryName());
         return productDto;
     }
 

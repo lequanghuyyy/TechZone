@@ -3,14 +3,18 @@ package com.springboot.shopbubu.service.impl;
 import com.springboot.shopbubu.dto.CustomerDto;
 
 
+import com.springboot.shopbubu.dto.CustomerSummaryDto;
+import com.springboot.shopbubu.entity.CustomerDetailEntity;
 import com.springboot.shopbubu.entity.CustomerEntity;
 import com.springboot.shopbubu.mapper.CustomerDetailMapper;
 import com.springboot.shopbubu.mapper.CustomerMapper;
 import com.springboot.shopbubu.repository.CustomerDetailRepository;
 import com.springboot.shopbubu.repository.CustomerRepository;
+import com.springboot.shopbubu.security.CustomUserDetails;
 import com.springboot.shopbubu.service.CustomerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,15 +37,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDto> findAll() {
-        return customerRepository.findAll().stream().map(customerMapper::convertToCustomerDto).toList();
+    public List<CustomerSummaryDto> findAll() {
+        return customerRepository.findAll().stream().map(customerMapper::covertToCustomerSummaryDto).toList();
     }
 
     @Override
     public CustomerDto create(CustomerDto customerDto) {
-       CustomerEntity customerEntity = customerMapper.convertToCustomerEntity(customerDto);
+        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomerEntity customerEntity = customerMapper.convertToCustomerEntity(customerDto);
+       CustomerDetailEntity customerDetailEntity = customerDetailMapper.convertToCustomerDetailEntity(customerDto.getCustomerDetail());
+       customerEntity.setCustomerDetail(customerDetailEntity);
+        customerDto.setUserId(principal.getUser().getId());
+       customerDetailEntity.setCustomer(customerEntity);
         customerEntity = customerRepository.save(customerEntity);
-        customerDetailRepository.save(customerDetailMapper.convertToCustomerDetailEntity(customerDto.getCustomerDetail()));
         return customerMapper.convertToCustomerDto(customerEntity);
     }
 

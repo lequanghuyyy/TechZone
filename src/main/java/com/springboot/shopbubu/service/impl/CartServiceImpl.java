@@ -49,7 +49,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartDto create(CartDto cartDto) {
         CartEntity cartEntity = cartMapper.convertToCartEntity(cartDto);
-        cartEntity.setCustomer(customerMapper.convertToCustomerEntity(cartDto.getCustomer()));
+//        cartEntity.setCustomer(customerMapper.convertToCustomerEntity(cartDto.getCustomerId()));
         cartRepository.save(cartEntity);
         return cartMapper.convertToCartDto(cartEntity);
     }

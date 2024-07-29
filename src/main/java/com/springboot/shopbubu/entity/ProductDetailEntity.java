@@ -26,7 +26,7 @@ public class ProductDetailEntity {
     @Column(name = "is_new")
     private Boolean isNew;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private ProductEntity product;
 

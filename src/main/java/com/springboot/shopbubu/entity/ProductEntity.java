@@ -32,7 +32,7 @@ public class ProductEntity extends AbstractEntity<Long> {
     @JoinColumn(name = "category_id",referencedColumnName = "id")
     private CategoryEntity category;
 
-    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private ProductDetailEntity productDetail;
 
     @OneToMany(mappedBy = "product")

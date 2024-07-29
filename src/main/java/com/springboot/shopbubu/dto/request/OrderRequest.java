@@ -2,7 +2,6 @@ package com.springboot.shopbubu.dto.request;
 
 import com.springboot.shopbubu.dto.OrderDetailDto;
 import com.springboot.shopbubu.dto.OrderDto;
-import com.springboot.shopbubu.utils.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

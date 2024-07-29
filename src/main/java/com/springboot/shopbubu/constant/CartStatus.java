@@ -1,4 +1,4 @@
-package com.springboot.shopbubu.utils;
+package com.springboot.shopbubu.constant;
 
 public enum CartStatus {
     PAID,

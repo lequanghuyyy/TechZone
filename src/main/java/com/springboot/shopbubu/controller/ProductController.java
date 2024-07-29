@@ -19,6 +19,7 @@ public class ProductController {
         this.productService = productService;
     }
     @GetMapping("/findAll")
+
     public ResponseEntity<BaseResponse<List<ProductDto>>> findAll(){
             return ResponseFactory.ok(productService.findAll());
     }

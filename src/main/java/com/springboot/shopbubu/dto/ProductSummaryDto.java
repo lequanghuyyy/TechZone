@@ -1,21 +1,17 @@
 package com.springboot.shopbubu.dto;
 
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-
-public class ProductDto extends AbstractDto {
+@Getter@Setter@AllArgsConstructor@NoArgsConstructor
+public class ProductSummaryDto {
     private String productCode;
     private String productName;
     private String image;
     private Integer numberPurchase;
     private BigDecimal price;
-    private String categoryName;
-    private ProductDetailDto productDetail;
 }

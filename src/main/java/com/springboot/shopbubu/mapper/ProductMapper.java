@@ -1,6 +1,7 @@
 package com.springboot.shopbubu.mapper;
 
 import com.springboot.shopbubu.dto.ProductDto;
+import com.springboot.shopbubu.dto.ProductSummaryDto;
 import com.springboot.shopbubu.entity.ProductEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,14 @@ public class ProductMapper {
         ProductDto productDto = modelMapper.map(productEntity, ProductDto.class);
         productDto.setCategoryName(productEntity.getCategory().getCategoryName());
 //        productDto.setProductDetail(productDetailMapper.convertToProductDetailDto(productEntity.getProductDetail()));
-        return modelMapper.map(productEntity, ProductDto.class);
+        return productDto;
     }
     public ProductEntity convertToProductEntity(ProductDto productDto){
         ProductEntity productEntity = modelMapper.map(productDto, ProductEntity.class);
         return modelMapper.map(productDto, ProductEntity.class);
+    }
+    public ProductSummaryDto convertToProductSummaryDto(ProductEntity productEntity){
+        ProductSummaryDto productSummaryDto = modelMapper.map(productEntity, ProductSummaryDto.class);
+        return productSummaryDto;
     }
 }

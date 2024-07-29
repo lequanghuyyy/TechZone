@@ -1,13 +1,13 @@
 package com.springboot.shopbubu.dto;
 
 
-import com.springboot.shopbubu.utils.OrderStatus;
-import com.springboot.shopbubu.utils.PaymentType;
+import com.springboot.shopbubu.constant.OrderStatus;
+
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
+
 
 @Setter
 @Getter
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class OrderDto {
     private Long id;
-    private CustomerDto customer;
+    private Integer customerId;
     private Date orderDate;
     private Date shippedDate;
     private String shipName;

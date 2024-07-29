@@ -1,6 +1,7 @@
 package com.springboot.shopbubu.controller;
 
 import com.springboot.shopbubu.dto.CustomerDto;
+import com.springboot.shopbubu.dto.CustomerSummaryDto;
 import com.springboot.shopbubu.dto.response.BaseResponse;
 import com.springboot.shopbubu.dto.response.CustomerResponse;
 import com.springboot.shopbubu.dto.response.ResponseFactory;
@@ -19,7 +20,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
     @GetMapping("/findAll")
-    public ResponseEntity<BaseResponse<List<CustomerDto>>> getCustomer() {
+    public ResponseEntity<BaseResponse<List<CustomerSummaryDto>>> getCustomer() {
         try {
             return ResponseFactory.ok(customerService.findAll());
         }
@@ -47,30 +48,20 @@ public class CustomerController {
     }
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<CustomerDto>> createCustomer(@RequestBody CustomerDto customerDto) {
-        try {
             return ResponseFactory.ok(customerService.create(customerDto));
-        }
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
     }
     @PutMapping("/update")
     public ResponseEntity<BaseResponse<CustomerDto>> updateCustomer(@RequestBody CustomerDto customerDto) {
-        try {
+
             return ResponseFactory.ok(customerService.update(customerDto));
-        }
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
+
+
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<BaseResponse<Void>> deleteCustomer(@PathVariable Long id) {
-        try {
-            customerService.deleteById(id);
-            return ResponseFactory.ok(null);
-        }
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
+
+        customerService.deleteById(id);
+        return ResponseFactory.ok(null);
+
     }
 }

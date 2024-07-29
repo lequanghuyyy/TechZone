@@ -1,6 +1,6 @@
 package com.springboot.shopbubu.dto;
 
-import com.springboot.shopbubu.utils.CartStatus;
+import com.springboot.shopbubu.constant.CartStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor@NoArgsConstructor
 public class CartDto extends AbstractDto {
 
-    private CustomerDto customer;
+    private Integer customerId;
     private BigDecimal totalProduct;
     private CartStatus cartStatus;
     private List<CartProductDto> cartProducts;
