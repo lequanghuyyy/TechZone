@@ -4,21 +4,34 @@ import com.springboot.shopbubu.dto.JwtDto;
 import com.springboot.shopbubu.dto.UserDto;
 import com.springboot.shopbubu.entity.UserEntity;
 import com.springboot.shopbubu.exception.AlreadyExistsException;
+import com.springboot.shopbubu.exception.InvalidCredentialsException;
 import com.springboot.shopbubu.repository.RoleRepository;
 import com.springboot.shopbubu.repository.UserRepository;
+import com.springboot.shopbubu.security.CustomUserDetails;
+import com.springboot.shopbubu.security.JwtTokenProvider;
 import com.springboot.shopbubu.service.UserService;
 import com.springboot.shopbubu.dto.response.ResponseUser;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Date;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
     private final RoleRepository roleRepository;
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
 
     @Override
     @Transactional
@@ -35,6 +48,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         UserEntity entity = new UserEntity();
+        entity.setPassword(passwordEncoder.encode(user.getPassword()));
         entity.setUsername(user.getUsername());
         entity.setRoles(roleRepository.findAllByRoleNameIn(user.getRoles()));
         UserEntity savedUser = userRepository.save(entity);
@@ -46,8 +60,29 @@ public class UserServiceImpl implements UserService {
         return respUser;
     }
 
-    @Override
-    public JwtDto login(UserDto userDto) {
-        return null;
+    public JwtDto login(UserDto user) {
+        try {
+            // Perform authentication
+            // 1. pass encoder hash password
+            // 2. userDetail service
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+
+            // Retrieve user details from the authenticated token
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+            // Generate JWT token
+            String accessToken = jwtTokenProvider.generateToken(userDetails);
+            Date expriedDate = jwtTokenProvider.extractExpiration(accessToken);
+
+            return JwtDto.builder()
+                    .token(accessToken)
+                    .expiredIn(expriedDate)
+                    .build();
+        } catch (AuthenticationException e) {
+            // Handle authentication failure
+            log.error("Wrong username or password {}", e.getMessage(), e);
+            throw new InvalidCredentialsException("Wrong username or password");
+        }
     }
-}
+    }

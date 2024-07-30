@@ -12,6 +12,6 @@ import java.math.BigDecimal;
 public class CartProductDto {
     private Integer id;
     private BigDecimal cartPrice;
-    private String productCode;
+    private Integer productId;
     private Integer quantity;
 }

@@ -1,5 +1,6 @@
 package com.springboot.shopbubu.controller;
 
+import com.springboot.shopbubu.dto.JwtDto;
 import com.springboot.shopbubu.dto.UserDto;
 import com.springboot.shopbubu.dto.response.ResponseUser;
 import com.springboot.shopbubu.service.UserService;
@@ -19,5 +20,9 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<ResponseUser> signup(@Valid @RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.register(userDto));
+    }
+    @PostMapping("/login")
+    public ResponseEntity<JwtDto> login(@RequestBody UserDto loginDTO) {
+        return ResponseEntity.ok(userService.login(loginDTO));
     }
 }

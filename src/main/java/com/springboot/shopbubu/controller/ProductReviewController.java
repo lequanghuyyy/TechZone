@@ -20,39 +20,23 @@ public class ProductReviewController {
     }
     @GetMapping("/findById/{id}")
     public ResponseEntity<BaseResponse<ProductReviewDto>> findById(@PathVariable Long id) {
-        try {
+
             return ResponseFactory.ok(productReviewService.findById(id));
-        }
-        catch (RuntimeException e){
-            return ResponseFactory.error();
-        }
+
     }
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<ProductReviewDto>> create(@RequestBody ProductReviewDto productReviewDto) {
-        try {
+
             return ResponseFactory.ok(productReviewService.create(productReviewDto));
-        }
-        catch (RuntimeException e){
-            return ResponseFactory.error();
-        }
     }
     @PutMapping("/update")
     public ResponseEntity<BaseResponse<ProductReviewDto>> update(@RequestBody ProductReviewDto productReviewDto) {
-        try {
             return ResponseFactory.ok(productReviewService.update(productReviewDto));
-        }
-        catch (RuntimeException e){
-            return ResponseFactory.error();
-        }
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id) {
-        try {
+
             productReviewService.delete(id);
             return ResponseFactory.ok(null);
-        }
-        catch (RuntimeException e){
-            return ResponseFactory.error();
-        }
     }
 }

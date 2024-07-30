@@ -15,7 +15,10 @@ public class ProductReviewMapper {
         this.modelMapper = modelMapper;
     }
     public ProductReviewDto convertToProductReviewDto(ProductReviewEntity productReviewEntity) {
-        return modelMapper.map(productReviewEntity, ProductReviewDto.class);
+        ProductReviewDto productReviewDto = modelMapper.map(productReviewEntity, ProductReviewDto.class);
+        productReviewDto.setProductDetailId(Math.toIntExact(productReviewEntity.getProductDetail().getId()));
+        productReviewDto.setCustomerDetailId(Math.toIntExact(productReviewEntity.getCustomerDetail().getId()));
+        return productReviewDto;
     }
     public ProductReviewEntity convertToProductReviewEntity(ProductReviewDto productReviewDto) {
         return modelMapper.map(productReviewDto, ProductReviewEntity.class);

@@ -20,27 +20,15 @@ public class CategoryController {
     }
     @GetMapping("/findAll")
     public ResponseEntity<BaseResponse<List<CategoryDto>>> findAll() {
-        try {
            return ResponseFactory.ok(categoryService.findAll());
-        }
-        catch (RuntimeException e) {
-          return ResponseFactory.error();
-        }
-
     }
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<CategoryDto>> create(@RequestBody CategoryDto categoryDto ) {
-        try { return ResponseFactory.ok(categoryService.create(categoryDto));}
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
+         return ResponseFactory.ok(categoryService.create(categoryDto));
     }
     @PutMapping("/update")
     public ResponseEntity<BaseResponse<CategoryDto>> update(@RequestBody CategoryDto categoryDto ) {
-         try{ return ResponseFactory.ok(categoryService.update(categoryDto));}
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
+        return ResponseFactory.ok(categoryService.update(categoryDto));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id){

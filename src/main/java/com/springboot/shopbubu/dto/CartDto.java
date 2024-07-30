@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor@NoArgsConstructor
 public class CartDto extends AbstractDto {
 
-    private Integer customerId;
+    private Long customerId;
     private BigDecimal totalProduct;
     private CartStatus cartStatus;
     private List<CartProductDto> cartProducts;

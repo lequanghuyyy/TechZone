@@ -13,10 +13,16 @@ import com.springboot.shopbubu.repository.CustomerRepository;
 import com.springboot.shopbubu.security.CustomUserDetails;
 import com.springboot.shopbubu.service.CustomerService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -43,12 +49,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto create(CustomerDto customerDto) {
-        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        customerDto.getCustomerDetail().setAge(calculateAge(customerDto.getCustomerDetail().getBirthday()));
+        customerDto.setUserId(getIdUserCurrent());
         CustomerEntity customerEntity = customerMapper.convertToCustomerEntity(customerDto);
-       CustomerDetailEntity customerDetailEntity = customerDetailMapper.convertToCustomerDetailEntity(customerDto.getCustomerDetail());
-       customerEntity.setCustomerDetail(customerDetailEntity);
-        customerDto.setUserId(principal.getUser().getId());
-       customerDetailEntity.setCustomer(customerEntity);
+        CustomerDetailEntity customerDetailEntity = customerDetailMapper.convertToCustomerDetailEntity(customerDto.getCustomerDetail());
+        customerEntity.setCustomerDetail(customerDetailEntity);
+        customerDetailEntity.setCustomer(customerEntity);
         customerEntity = customerRepository.save(customerEntity);
         return customerMapper.convertToCustomerDto(customerEntity);
     }
@@ -78,6 +84,17 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteById(Long id) {
         customerRepository.deleteById(id);
+    }
+    public int calculateAge(Date birthDate) {
+        LocalDate birthLocalDate = birthDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        LocalDate currentDate = LocalDate.now();
+        return Period.between(birthLocalDate, currentDate).getYears();
+    }
+    public Long getIdUserCurrent(){
+        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principal.getUser().getId();
     }
 
 }

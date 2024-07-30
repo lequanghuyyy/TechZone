@@ -33,18 +33,12 @@ public class ProductController {
     }
     @PutMapping("/update")
     public ResponseEntity<BaseResponse<ProductDto>> update(@RequestBody ProductDto productDto){
-        try {
             return ResponseFactory.ok(productService.update(productDto));
-        }
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id){
             productService.deleteById(id);
-            return ResponseFactory.error();
-
+            return ResponseFactory.ok(null);
     }
 
 }

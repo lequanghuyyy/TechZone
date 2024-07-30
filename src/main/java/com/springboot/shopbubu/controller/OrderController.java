@@ -20,48 +20,33 @@ public class OrderController {
     }
     @GetMapping("/findAll")
     public ResponseEntity<BaseResponse<List<OrderDto>>> findAll() {
-        try {
+
             return ResponseFactory.ok(orderService.findAll());
-        }
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
+
+
     }
     @GetMapping("/findById/{id}")
     public ResponseEntity<BaseResponse<OrderDto>> findById(@PathVariable Long id) {
-        try {
+
             return ResponseFactory.ok(orderService.findById(id));
-        }
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
+
+
     }
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<OrderDto>> create(@RequestBody OrderDto orderDto) {
-        try {
+
             return ResponseFactory.ok(orderService.create(orderDto));
-        }
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
+
     }
     @PutMapping("/update")
     public ResponseEntity<BaseResponse<OrderDto>> update(@RequestBody OrderDto orderDto) {
-        try {
+
             return ResponseFactory.ok(orderService.update(orderDto));
-        }
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id) {
-        try {
             orderService.delete(id);
             return ResponseFactory.ok(null);
-        }
-        catch (RuntimeException e) {
-            return ResponseFactory.error();
-        }
+
     }
 }

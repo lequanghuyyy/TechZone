@@ -15,9 +15,9 @@ public class ResponseFactory {
         response.setDescription("success");
         return ResponseEntity.ok(response);
     }
-    public static <T> ResponseEntity<BaseResponse<T>> error() {
-        BaseResponse<T> response = new BaseResponse<>();
-        response.setData(null);
+    public static ResponseEntity<BaseResponse<String>> error(String m) {
+        BaseResponse<String> response = new BaseResponse<>();
+        response.setData(m);
         response.setStatus(AppConstant.Fail_CODE);
         response.setDescription("fail");
         return ResponseEntity.badRequest().body(response);

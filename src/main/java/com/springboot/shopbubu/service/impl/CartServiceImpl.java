@@ -1,34 +1,45 @@
 package com.springboot.shopbubu.service.impl;
 
+import com.springboot.shopbubu.constant.CartStatus;
 import com.springboot.shopbubu.dto.CartDto;
 import com.springboot.shopbubu.dto.CartProductDto;
+import com.springboot.shopbubu.dto.ProductDto;
 import com.springboot.shopbubu.entity.CartEntity;
 import com.springboot.shopbubu.entity.CartProductEntity;
+import com.springboot.shopbubu.entity.CustomerEntity;
+import com.springboot.shopbubu.entity.ProductEntity;
 import com.springboot.shopbubu.mapper.CartMapper;
 import com.springboot.shopbubu.mapper.CartProductMapper;
 import com.springboot.shopbubu.mapper.CustomerMapper;
 import com.springboot.shopbubu.repository.CartProductRepository;
 import com.springboot.shopbubu.repository.CartRepository;
 import com.springboot.shopbubu.repository.CustomerRepository;
+import com.springboot.shopbubu.repository.ProductRepository;
+import com.springboot.shopbubu.security.CustomUserDetails;
 import com.springboot.shopbubu.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
+    private final ProductRepository productRepository;
     private final CartProductRepository cartProductRepository;
     private final CartMapper cartMapper;
     private final CartProductMapper cartProductMapper;
     private final CustomerMapper customerMapper;
     private final CustomerRepository customerRepository;
     @Autowired
-    public CartServiceImpl(CartRepository cartRepository, CartProductRepository cartProductRepository, CartMapper cartMapper, CartProductMapper cartProductMapper, CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CartServiceImpl(CartRepository cartRepository, ProductRepository productRepository, CartProductRepository cartProductRepository, CartMapper cartMapper, CartProductMapper cartProductMapper, CustomerRepository customerRepository, CustomerMapper customerMapper) {
         this.cartRepository = cartRepository;
+        this.productRepository = productRepository;
         this.cartProductRepository = cartProductRepository;
         this.cartMapper = cartMapper;
         this.cartProductMapper = cartProductMapper;
@@ -48,8 +59,11 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDto create(CartDto cartDto) {
+        Optional<CustomerEntity> customerEntity = customerRepository.findById(getIdUserCurrent());
+        cartDto.setTotalProduct(getTotalProduct(cartDto.getCartProducts()));
+        cartDto.setCartStatus(CartStatus.UNPAID);
         CartEntity cartEntity = cartMapper.convertToCartEntity(cartDto);
-//        cartEntity.setCustomer(customerMapper.convertToCustomerEntity(cartDto.getCustomerId()));
+        customerEntity.ifPresent(cartEntity::setCustomer);
         cartRepository.save(cartEntity);
         return cartMapper.convertToCartDto(cartEntity);
     }
@@ -62,5 +76,23 @@ public class CartServiceImpl implements CartService {
     @Override
     public void deleteById(Long id) {
         cartRepository.deleteById(id);
+    }
+    public Long getIdUserCurrent(){
+        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principal.getUser().getId();
+    }
+    public BigDecimal getTotalPriceCartProduct(CartProductDto cartProductDto) {
+        BigDecimal total = BigDecimal.ZERO;
+        Optional<ProductEntity> productEntity = productRepository.findById(Long.valueOf(cartProductDto.getProductId()));
+        BigDecimal a = productEntity.get().getPrice();
+        total = total.add(a).multiply(BigDecimal.valueOf(cartProductDto.getQuantity()));
+        return total;
+    }
+    public BigDecimal getTotalProduct(List<CartProductDto> cartProductDtoList) {
+        BigDecimal totalProduct = BigDecimal.ZERO;
+        for (CartProductDto cartProductDto : cartProductDtoList) {
+            totalProduct = totalProduct.add(getTotalPriceCartProduct(cartProductDto));
+        }
+        return totalProduct;
     }
 }

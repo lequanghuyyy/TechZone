@@ -40,6 +40,7 @@ public class CustomerMapper {
     }
     public CustomerSummaryDto covertToCustomerSummaryDto(CustomerEntity customerEntity) {
         CustomerSummaryDto customerSummaryDto = modelMapper.map(customerEntity, CustomerSummaryDto.class);
+        customerSummaryDto.setUserId(customerEntity.getUser().getId());
         return customerSummaryDto;
     }
 }

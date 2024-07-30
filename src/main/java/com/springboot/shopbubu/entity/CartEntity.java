@@ -28,7 +28,7 @@ public class CartEntity extends AbstractEntity<Long> {
     @Column(name = "cart_status", length = 255)
     private CartStatus cartStatus;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<CartProductEntity> cartProducts;
 
 }
