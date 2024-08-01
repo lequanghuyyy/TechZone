@@ -44,10 +44,6 @@ public class OrderEntity {
     private BigDecimal shippingFee;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "payment_type")
-    private PaymentType paymentType;
-
-    @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 
@@ -57,10 +53,7 @@ public class OrderEntity {
     @OneToOne(mappedBy = "orderEntity", cascade = CascadeType.ALL)
     private OrderDetailEntity orderDetails;
 
-    @ManyToOne
-    @JoinColumn(name = "cart_id", nullable = false)
-    private CartEntity cart;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<OrderItemEntity> orderItem;
 }

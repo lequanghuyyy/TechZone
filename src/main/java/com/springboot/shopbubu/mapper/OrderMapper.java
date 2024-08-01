@@ -15,7 +15,9 @@ public class OrderMapper {
         this.modelMapper = modelMapper;
     }
     public OrderDto convertToOrderDto(OrderEntity orderEntity) {
-        return modelMapper.map(orderEntity, OrderDto.class);
+        OrderDto orderDto = modelMapper.map(orderEntity, OrderDto.class);
+        orderDto.setCustomerId(Math.toIntExact(orderEntity.getCustomer().getId()));
+        return orderDto;
     }
     public OrderEntity convertToOrderEntity(OrderDto orderDto) {
         return modelMapper.map(orderDto, OrderEntity.class);

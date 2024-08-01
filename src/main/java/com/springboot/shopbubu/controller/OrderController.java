@@ -1,6 +1,7 @@
 package com.springboot.shopbubu.controller;
 
 import com.springboot.shopbubu.dto.OrderDto;
+import com.springboot.shopbubu.dto.request.PaymentRequest;
 import com.springboot.shopbubu.dto.response.BaseResponse;
 import com.springboot.shopbubu.dto.response.ResponseFactory;
 import com.springboot.shopbubu.service.OrderService;
@@ -33,9 +34,9 @@ public class OrderController {
 
     }
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<OrderDto>> create(@RequestBody OrderDto orderDto) {
+    public ResponseEntity<BaseResponse<OrderDto>> create(@RequestBody PaymentRequest paymentRequest) {
 
-            return ResponseFactory.ok(orderService.create(orderDto));
+            return ResponseFactory.ok(orderService.create(paymentRequest));
 
     }
     @PutMapping("/update")

@@ -6,10 +6,12 @@ import com.springboot.shopbubu.dto.CustomerDto;
 import com.springboot.shopbubu.dto.CustomerSummaryDto;
 import com.springboot.shopbubu.entity.CustomerDetailEntity;
 import com.springboot.shopbubu.entity.CustomerEntity;
+import com.springboot.shopbubu.entity.UserEntity;
 import com.springboot.shopbubu.mapper.CustomerDetailMapper;
 import com.springboot.shopbubu.mapper.CustomerMapper;
 import com.springboot.shopbubu.repository.CustomerDetailRepository;
 import com.springboot.shopbubu.repository.CustomerRepository;
+import com.springboot.shopbubu.repository.UserRepository;
 import com.springboot.shopbubu.security.CustomUserDetails;
 import com.springboot.shopbubu.service.CustomerService;
 
@@ -33,13 +35,15 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerDetailRepository customerDetailRepository;
     private final CustomerMapper customerMapper;
     private final CustomerDetailMapper customerDetailMapper;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerDetailRepository customerDetailRepository, CustomerMapper customerMapper, CustomerDetailMapper customerDetailMapper) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerDetailRepository customerDetailRepository, CustomerMapper customerMapper, CustomerDetailMapper customerDetailMapper, UserRepository userRepository) {
         this.customerRepository = customerRepository;
         this.customerDetailRepository = customerDetailRepository;
         this.customerMapper = customerMapper;
         this.customerDetailMapper = customerDetailMapper;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -50,8 +54,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto create(CustomerDto customerDto) {
         customerDto.getCustomerDetail().setAge(calculateAge(customerDto.getCustomerDetail().getBirthday()));
-        customerDto.setUserId(getIdUserCurrent());
         CustomerEntity customerEntity = customerMapper.convertToCustomerEntity(customerDto);
+        UserEntity userEntity = findUserEntityById(getIdUserCurrent());
+        customerEntity.setUser(userEntity);
         CustomerDetailEntity customerDetailEntity = customerDetailMapper.convertToCustomerDetailEntity(customerDto.getCustomerDetail());
         customerEntity.setCustomerDetail(customerDetailEntity);
         customerDetailEntity.setCustomer(customerEntity);
@@ -95,6 +100,9 @@ public class CustomerServiceImpl implements CustomerService {
     public Long getIdUserCurrent(){
         CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return principal.getUser().getId();
+    }
+    public UserEntity findUserEntityById(Long id) {
+        return userRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
 }

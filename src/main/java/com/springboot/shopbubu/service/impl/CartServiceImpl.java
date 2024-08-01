@@ -63,6 +63,7 @@ public class CartServiceImpl implements CartService {
         cartDto.setTotalProduct(getTotalProduct(cartDto.getCartProducts()));
         cartDto.setCartStatus(CartStatus.UNPAID);
         CartEntity cartEntity = cartMapper.convertToCartEntity(cartDto);
+        cartEntity.setCartProducts(convertListCartProductEntity(cartDto.getCartProducts(),cartEntity));
         customerEntity.ifPresent(cartEntity::setCustomer);
         cartRepository.save(cartEntity);
         return cartMapper.convertToCartDto(cartEntity);
@@ -94,5 +95,17 @@ public class CartServiceImpl implements CartService {
             totalProduct = totalProduct.add(getTotalPriceCartProduct(cartProductDto));
         }
         return totalProduct;
+    }
+    public List<CartProductEntity> convertListCartProductEntity(List<CartProductDto> cartProductDtoList,CartEntity cartEntity) {
+        List<CartProductEntity> cartProductEntityList = new ArrayList<>();
+        for (CartProductDto cartProductDto : cartProductDtoList) {
+            CartProductEntity cartProductEntity = cartProductMapper.convertToCartProductEntity(cartProductDto);
+            cartProductEntity.setCart(cartEntity);
+            ProductEntity productEntity = productRepository.findById(Long.valueOf(cartProductDto.getProductId())).orElseThrow(() -> new NoSuchElementException("Product not found with id: " + cartProductDto.getProductId()));
+            cartProductEntity.setProduct(productEntity);
+            cartProductEntity.setCartPrice(productEntity.getPrice().add(BigDecimal.valueOf(cartProductEntity.getQuantity())));
+            cartProductEntityList.add(cartProductEntity);
+        }
+        return cartProductEntityList;
     }
 }

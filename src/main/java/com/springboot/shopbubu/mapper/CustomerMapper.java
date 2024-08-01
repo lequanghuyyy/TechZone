@@ -16,18 +16,13 @@ import java.util.NoSuchElementException;
 public class CustomerMapper {
     private final ModelMapper modelMapper;
     private final CustomerDetailMapper customerDetailMapper;
-    private final UserRepository userRepository;
     @Autowired
-    public CustomerMapper(ModelMapper modelMapper, CustomerDetailMapper customerDetailMapper, UserRepository userRepository) {
+    public CustomerMapper(ModelMapper modelMapper, CustomerDetailMapper customerDetailMapper) {
         this.modelMapper = modelMapper;
         this.customerDetailMapper = customerDetailMapper;
-        this.userRepository = userRepository;
     }
     public CustomerEntity convertToCustomerEntity(CustomerDto customerDto) {
         CustomerEntity customerEntity = modelMapper.map(customerDto, CustomerEntity.class);
-        UserEntity userEntity = userRepository.findById(customerDto.getUserId())
-                .orElseThrow(NoSuchElementException::new);
-        customerEntity.setUser(userEntity);
         customerEntity.setCustomerDetail(customerDetailMapper.convertToCustomerDetailEntity(customerDto.getCustomerDetail()));
 
         return customerEntity;

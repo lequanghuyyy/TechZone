@@ -7,6 +7,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class CartProductMapper {
     private final ModelMapper modelMapper;
@@ -14,10 +17,19 @@ public class CartProductMapper {
     public CartProductMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
-    public CartProductDto convertToCartDto(CartEntity cartEntity){
-        return modelMapper.map(cartEntity, CartProductDto.class);
+    public CartProductDto convertToCartDto(CartProductEntity cartProductEntity){
+        CartProductDto cartProductDto = modelMapper.map(cartProductEntity, CartProductDto.class);
+        cartProductDto.setProductId(Math.toIntExact(cartProductEntity.getProduct().getId()));
+        return cartProductDto;
     }
     public CartProductEntity convertToCartProductEntity(CartProductDto cartProductDto){
         return modelMapper.map(cartProductDto, CartProductEntity.class);
+    }
+    public List<CartProductDto> convertListCartProductDto(List<CartProductEntity> cartProductEntities){
+        List<CartProductDto> cartProductDtoList = new ArrayList<>();
+        for (CartProductEntity cartProductEntity : cartProductEntities){
+            cartProductDtoList.add(convertToCartDto(cartProductEntity));
+        }
+        return cartProductDtoList;
     }
 }
