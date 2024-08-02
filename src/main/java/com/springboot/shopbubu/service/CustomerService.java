@@ -11,6 +11,5 @@ public interface CustomerService {
     CustomerDto create(CustomerDto customerDto);
     CustomerDto findById(Long id);
     CustomerDto findByName(String name);
-    CustomerDto update(CustomerDto customerDto);
     void deleteById(Long id);
 }

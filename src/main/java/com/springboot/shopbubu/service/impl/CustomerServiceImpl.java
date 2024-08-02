@@ -32,15 +32,13 @@ import java.util.NoSuchElementException;
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
-    private final CustomerDetailRepository customerDetailRepository;
     private final CustomerMapper customerMapper;
     private final CustomerDetailMapper customerDetailMapper;
     private final UserRepository userRepository;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerDetailRepository customerDetailRepository, CustomerMapper customerMapper, CustomerDetailMapper customerDetailMapper, UserRepository userRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper, CustomerDetailMapper customerDetailMapper, UserRepository userRepository) {
         this.customerRepository = customerRepository;
-        this.customerDetailRepository = customerDetailRepository;
         this.customerMapper = customerMapper;
         this.customerDetailMapper = customerDetailMapper;
         this.userRepository = userRepository;
@@ -79,17 +77,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto update(CustomerDto customerDto) {
-        if (customerRepository.findById(customerDto.getId()).isEmpty()) {
-            throw new NoSuchElementException("Customer not found");
-        }
-        return null;
-    }
-
-    @Override
     public void deleteById(Long id) {
         customerRepository.deleteById(id);
     }
+
     public int calculateAge(Date birthDate) {
         LocalDate birthLocalDate = birthDate.toInstant()
                 .atZone(ZoneId.systemDefault())

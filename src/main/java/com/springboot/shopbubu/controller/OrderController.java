@@ -21,33 +21,23 @@ public class OrderController {
     }
     @GetMapping("/findAll")
     public ResponseEntity<BaseResponse<List<OrderDto>>> findAll() {
-
             return ResponseFactory.ok(orderService.findAll());
-
-
     }
     @GetMapping("/findById/{id}")
     public ResponseEntity<BaseResponse<OrderDto>> findById(@PathVariable Long id) {
-
             return ResponseFactory.ok(orderService.findById(id));
-
-
     }
     @PostMapping("/create")
     public ResponseEntity<BaseResponse<OrderDto>> create(@RequestBody PaymentRequest paymentRequest) {
-
             return ResponseFactory.ok(orderService.create(paymentRequest));
-
     }
     @PutMapping("/update")
     public ResponseEntity<BaseResponse<OrderDto>> update(@RequestBody OrderDto orderDto) {
-
             return ResponseFactory.ok(orderService.update(orderDto));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id) {
             orderService.delete(id);
             return ResponseFactory.ok(null);
-
     }
 }

@@ -11,6 +11,7 @@ import com.springboot.shopbubu.repository.CategoryRepository;
 import com.springboot.shopbubu.repository.ProductDetailRepository;
 import com.springboot.shopbubu.repository.ProductRepository;
 import com.springboot.shopbubu.service.ProductService;
+import com.springboot.shopbubu.utils.SetterToUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +64,14 @@ public class ProductServiceImpl implements ProductService {
     }
     @Override
     public ProductDto update(ProductDto productDto) {
-        return null;
+        ProductEntity productEntity = productRepository.findById(productDto.getId()).orElseThrow(() -> new NoSuchElementException("Product not found"));
+        SetterToUpdate.setProduct(productEntity, productDto);
+        productEntity = productRepository.save(productEntity);
+        return productMapper.convertToProductDto(productEntity);
     }
-
     @Override
     public void deleteById(Long id) {
+        productDetailRepository.deleteById(id);
         productRepository.deleteById(id);
     }
 }

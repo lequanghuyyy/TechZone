@@ -37,13 +37,6 @@ public class CustomerController {
     public ResponseEntity<BaseResponse<CustomerDto>> createCustomer(@RequestBody CustomerDto customerDto) {
             return ResponseFactory.ok(customerService.create(customerDto));
     }
-    @PutMapping("/update")
-    public ResponseEntity<BaseResponse<CustomerDto>> updateCustomer(@RequestBody CustomerDto customerDto) {
-
-            return ResponseFactory.ok(customerService.update(customerDto));
-
-
-    }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<BaseResponse<Void>> deleteCustomer(@PathVariable Long id) {
         customerService.deleteById(id);

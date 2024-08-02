@@ -8,9 +8,11 @@ import com.springboot.shopbubu.repository.CategoryRepository;
 import com.springboot.shopbubu.service.CategoryService;
 import com.springboot.shopbubu.utils.SetterToUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -45,11 +47,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto update(CategoryDto categoryDto) {
-        categoryRepository.findById(categoryDto.getId());
-        CategoryEntity categoryEntity = categoryMapper.convertToCategoryEntity(categoryDto);
+        CategoryEntity categoryEntity = categoryRepository.findById(categoryDto.getId()).orElseThrow(() -> new NoSuchElementException("Not found category with id :" + categoryDto.getId()));
         SetterToUpdate.setCategory(categoryDto,categoryEntity);
         categoryRepository.save(categoryEntity);
-        return categoryDto;
+        return categoryMapper.convertToCategoryDto(categoryEntity);
     }
 
     @Override

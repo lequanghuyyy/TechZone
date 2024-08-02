@@ -2,6 +2,7 @@ package com.springboot.shopbubu.service.impl;
 
 import com.springboot.shopbubu.constant.CartStatus;
 import com.springboot.shopbubu.constant.OrderStatus;
+import com.springboot.shopbubu.constant.ShipPrice;
 import com.springboot.shopbubu.dto.CartProductDto;
 import com.springboot.shopbubu.dto.OrderDto;
 import com.springboot.shopbubu.dto.OrderItemDto;
@@ -16,15 +17,14 @@ import com.springboot.shopbubu.repository.OrderDetailRepository;
 import com.springboot.shopbubu.repository.OrderRepository;
 import com.springboot.shopbubu.security.CustomUserDetails;
 import com.springboot.shopbubu.service.OrderService;
+import com.springboot.shopbubu.utils.SetterToUpdate;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService  {
@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService  {
     public OrderDto create(PaymentRequest paymentRequest) {
         CartEntity cartEntity = cartRepository.findById(paymentRequest.getCartId()).orElseThrow(NoSuchElementException::new);
         OrderEntity orderEntity = orderMapper.convertToOrderEntity(paymentRequest.getOrderDto());
-        orderEntity.setSumPrice(cartEntity.getTotalProduct());
+        orderEntity.setSumPrice(cartEntity.getTotalProduct().add(ShipPrice.SHIP_PRICE.getValue()));
         orderEntity.setOrderDate(new Date());
 
         List<OrderItemEntity> orderItemEntities = orderItemMapper.convertToOrderItemEntity(cartEntity.getCartProducts());
@@ -79,7 +79,9 @@ public class OrderServiceImpl implements OrderService  {
         cartEntity.setCartStatus(CartStatus.PAID);
         cartRepository.save(cartEntity);
 
-        return orderMapper.convertToOrderDto(orderEntity);
+        OrderDto orderDto = orderMapper.convertToOrderDto(orderEntity);
+        orderDto.setOrderItems(orderEntity.getOrderItem().stream().map(orderItemMapper::convertToOrderItemDto).toList());
+        return orderDto;
     }
 
 
@@ -93,7 +95,16 @@ public class OrderServiceImpl implements OrderService  {
 
     @Override
     public OrderDto update(OrderDto orderDto) {
-        return null;
+        OrderEntity orderEntity = orderRepository.findById(orderDto.getId()).orElseThrow(() -> new NoSuchElementException("Order not found"));
+        if (orderEntity.getOrderStatus() == OrderStatus.SHIPPED) {
+            throw new NoSuchElementException("Order shipped");
+        }
+        if (!Objects.equals(orderEntity.getCustomer().getUser().getId(), getIdUserCurrent())) {
+            throw new AccessDeniedException("You don't have permission to update this order");
+        }
+        SetterToUpdate.setOrder(orderDto,orderEntity);
+        orderRepository.save(orderEntity);
+        return orderMapper.convertToOrderDto(orderEntity);
     }
 
     @Override
@@ -106,10 +117,6 @@ public class OrderServiceImpl implements OrderService  {
         return principal.getUser().getId();
     }
     public int sumOfProduct(List<CartProductEntity> cartProductEntities) {
-        int sum = 0;
-        for (CartProductEntity cartProductEntity : cartProductEntities) {
-            sum = sum + cartProductEntity.getQuantity();
-        }
-        return sum;
+        return cartProductEntities.stream().mapToInt(CartProductEntity::getQuantity).sum();
     }
 }

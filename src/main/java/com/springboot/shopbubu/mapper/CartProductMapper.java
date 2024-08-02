@@ -20,6 +20,7 @@ public class CartProductMapper {
     public CartProductDto convertToCartDto(CartProductEntity cartProductEntity){
         CartProductDto cartProductDto = modelMapper.map(cartProductEntity, CartProductDto.class);
         cartProductDto.setProductId(Math.toIntExact(cartProductEntity.getProduct().getId()));
+        cartProductDto.setPrice(cartProductEntity.getProduct().getPrice());
         return cartProductDto;
     }
     public CartProductEntity convertToCartProductEntity(CartProductDto cartProductDto){

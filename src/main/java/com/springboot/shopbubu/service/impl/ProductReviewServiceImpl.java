@@ -11,9 +11,12 @@ import com.springboot.shopbubu.repository.ProductReviewRepository;
 import com.springboot.shopbubu.security.CustomUserDetails;
 import com.springboot.shopbubu.service.ProductReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -51,7 +54,17 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
     @Override
     public ProductReviewDto update(ProductReviewDto productReviewDto) {
-        return null;
+        ProductReviewEntity productReviewEntity = productReviewRepository.findById(productReviewDto.getId()).orElseThrow(() -> new NoSuchElementException("Not found review"));
+//        if (!productReviewEntity.getCustomerDetail().getId().equals(getIdCustomerCurrent())){
+//            throw new AccessDeniedException("Not update this resource");
+//        }
+        if (productReviewDto.getComment() != null){
+        productReviewEntity.setComment(productReviewDto.getComment());}
+        if (productReviewDto.getRating() != null){
+        productReviewEntity.setRating(productReviewDto.getRating());}
+        productReviewEntity.setUpdatedAt(new Date());
+        return productReviewMapper.convertToProductReviewDto(productReviewRepository.save(productReviewEntity));
+
     }
 
     @Override
@@ -61,6 +74,10 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     public Integer getIdUserCurrent(){
         CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return Math.toIntExact(principal.getUser().getId());
+    }
+    public Integer getIdCustomerCurrent(){
+        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return Math.toIntExact(principal.getUser().getCustomerEntity().getCustomerDetail().getId());
     }
 
 }

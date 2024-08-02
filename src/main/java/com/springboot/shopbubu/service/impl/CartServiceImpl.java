@@ -18,14 +18,12 @@ import com.springboot.shopbubu.repository.ProductRepository;
 import com.springboot.shopbubu.security.CustomUserDetails;
 import com.springboot.shopbubu.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -71,7 +69,15 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDto update(CartDto cartDto) {
-        return null;
+        CartEntity cartEntity = cartRepository.findById(cartDto.getId()).orElseThrow(NoSuchElementException::new);
+        if (!Objects.equals(cartEntity.getCustomer().getUser().getId(), getIdUserCurrent())) {
+            throw new AccessDeniedException("You do not have permission to update this cart.");
+        }
+        List<CartProductEntity> cartProductEntityList = convertListCartProductEntity(cartDto.getCartProducts(),cartEntity);
+        cartEntity.setCartProducts(cartProductEntityList);
+        cartEntity.setUpdatedAt(new Date());
+        cartEntity.setTotalProduct(getTotalProduct(cartDto.getCartProducts()));
+        return cartMapper.convertToCartDto(cartEntity);
     }
 
     @Override
@@ -83,11 +89,9 @@ public class CartServiceImpl implements CartService {
         return principal.getUser().getId();
     }
     public BigDecimal getTotalPriceCartProduct(CartProductDto cartProductDto) {
-        BigDecimal total = BigDecimal.ZERO;
         Optional<ProductEntity> productEntity = productRepository.findById(Long.valueOf(cartProductDto.getProductId()));
         BigDecimal a = productEntity.get().getPrice();
-        total = total.add(a).multiply(BigDecimal.valueOf(cartProductDto.getQuantity()));
-        return total;
+        return a.multiply(BigDecimal.valueOf(cartProductDto.getQuantity()));
     }
     public BigDecimal getTotalProduct(List<CartProductDto> cartProductDtoList) {
         BigDecimal totalProduct = BigDecimal.ZERO;
@@ -100,6 +104,7 @@ public class CartServiceImpl implements CartService {
         List<CartProductEntity> cartProductEntityList = new ArrayList<>();
         for (CartProductDto cartProductDto : cartProductDtoList) {
             CartProductEntity cartProductEntity = cartProductMapper.convertToCartProductEntity(cartProductDto);
+            cartProductEntity.setId(cartProductDto.getProductId());
             cartProductEntity.setCart(cartEntity);
             ProductEntity productEntity = productRepository.findById(Long.valueOf(cartProductDto.getProductId())).orElseThrow(() -> new NoSuchElementException("Product not found with id: " + cartProductDto.getProductId()));
             cartProductEntity.setProduct(productEntity);
