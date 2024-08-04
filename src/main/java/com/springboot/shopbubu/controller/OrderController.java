@@ -7,6 +7,7 @@ import com.springboot.shopbubu.dto.response.ResponseFactory;
 import com.springboot.shopbubu.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,11 +29,11 @@ public class OrderController {
             return ResponseFactory.ok(orderService.findById(id));
     }
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<OrderDto>> create(@RequestBody PaymentRequest paymentRequest) {
+    public ResponseEntity<BaseResponse<OrderDto>> create(@Validated @RequestBody PaymentRequest paymentRequest) {
             return ResponseFactory.ok(orderService.create(paymentRequest));
     }
     @PutMapping("/update")
-    public ResponseEntity<BaseResponse<OrderDto>> update(@RequestBody OrderDto orderDto) {
+    public ResponseEntity<BaseResponse<OrderDto>> update(@Validated @RequestBody OrderDto orderDto) {
             return ResponseFactory.ok(orderService.update(orderDto));
     }
     @DeleteMapping("/delete/{id}")

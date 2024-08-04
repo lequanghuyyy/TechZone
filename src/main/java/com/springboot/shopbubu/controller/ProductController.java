@@ -8,9 +8,13 @@ import com.springboot.shopbubu.dto.response.ResponseFactory;
 import com.springboot.shopbubu.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/product")
@@ -30,17 +34,21 @@ public class ProductController {
             return ResponseFactory.ok(productService.findById(id));
     }
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<ProductDto>> create(@RequestBody ProductDto productDto){
+    public ResponseEntity<BaseResponse<ProductDto>> create(@Validated @RequestBody ProductDto productDto){
             return ResponseFactory.ok(productService.create(productDto));
     }
     @PutMapping("/update")
-    public ResponseEntity<BaseResponse<ProductDto>> update(@RequestBody ProductDto productDto){
+    public ResponseEntity<BaseResponse<ProductDto>> update(@Validated @RequestBody ProductDto productDto){
             return ResponseFactory.ok(productService.update(productDto));
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Long id){
             productService.deleteById(id);
             return ResponseFactory.ok(null);
+    }
+    @PostMapping("uploadImage/{id}")
+    public ResponseEntity<BaseResponse<Map>> uploadImage(@PathVariable Long id, MultipartFile file) throws IOException {
+        return ResponseFactory.ok(productService.uploadImage(file, id));
     }
 
 }

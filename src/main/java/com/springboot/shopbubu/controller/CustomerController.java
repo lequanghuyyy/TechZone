@@ -7,6 +7,7 @@ import com.springboot.shopbubu.dto.response.CustomerResponse;
 import com.springboot.shopbubu.dto.response.ResponseFactory;
 import com.springboot.shopbubu.service.CustomerService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class CustomerController {
             return ResponseFactory.ok(customerService.findByName(name));
     }
     @PostMapping("/create")
-    public ResponseEntity<BaseResponse<CustomerDto>> createCustomer(@RequestBody CustomerDto customerDto) {
+    public ResponseEntity<BaseResponse<CustomerDto>> createCustomer(@Validated @RequestBody CustomerDto customerDto) {
             return ResponseFactory.ok(customerService.create(customerDto));
     }
     @DeleteMapping("/delete/{id}")

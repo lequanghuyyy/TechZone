@@ -1,5 +1,6 @@
 package com.springboot.shopbubu.service.impl;
 
+import com.cloudinary.Cloudinary;
 import com.springboot.shopbubu.dto.ProductDto;
 import com.springboot.shopbubu.dto.paging.PageDto;
 import com.springboot.shopbubu.dto.paging.ProductSearchRequest;
@@ -19,8 +20,11 @@ import com.springboot.shopbubu.utils.SetterToUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -31,13 +35,15 @@ public class ProductServiceImpl implements ProductService {
     private final ProductMapper productMapper;
     private final ProductDetailMapper productDetailMapper;
     private final CategoryRepository categoryRepository;
+    private final Cloudinary cloudinary;
     private final ProductCustomRepository productCustomRepository;@Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ProductDetailRepository productDetailRepository, ProductMapper productMapper, ProductDetailMapper productDetailMapper, CategoryRepository categoryRepository, ProductCustomRepository productCustomRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductDetailRepository productDetailRepository, ProductMapper productMapper, ProductDetailMapper productDetailMapper, CategoryRepository categoryRepository, Cloudinary cloudinary, ProductCustomRepository productCustomRepository) {
         this.productRepository = productRepository;
         this.productDetailRepository = productDetailRepository;
         this.productMapper = productMapper;
         this.productDetailMapper = productDetailMapper;
         this.categoryRepository = categoryRepository;
+        this.cloudinary = cloudinary;
         this.productCustomRepository = productCustomRepository;
     }
 
@@ -102,6 +108,15 @@ public class ProductServiceImpl implements ProductService {
         productDetailRepository.deleteById(id);
         productRepository.deleteById(id);
     }
+
+    @Override
+    public Map uploadImage(MultipartFile file,Long id) throws IOException {
+        ProductEntity p = productRepository.findById(id).orElseThrow(() -> new NotFoundProductException("Product not found"));
+        p.setImage(file.getContentType());
+        productRepository.save(p);
+        return cloudinary.uploader().upload(file.getBytes(),Map.of());
+    }
+
     public String findCategoryNameById(Long id) {
         return categoryRepository.findById(id).get().getCategoryName();
     }
