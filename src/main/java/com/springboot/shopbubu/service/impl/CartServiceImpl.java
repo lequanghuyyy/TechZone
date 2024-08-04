@@ -8,6 +8,8 @@ import com.springboot.shopbubu.entity.CartEntity;
 import com.springboot.shopbubu.entity.CartProductEntity;
 import com.springboot.shopbubu.entity.CustomerEntity;
 import com.springboot.shopbubu.entity.ProductEntity;
+import com.springboot.shopbubu.exception.notFoundException.NotFoundCartException;
+import com.springboot.shopbubu.exception.notFoundException.NotFoundProductException;
 import com.springboot.shopbubu.mapper.CartMapper;
 import com.springboot.shopbubu.mapper.CartProductMapper;
 import com.springboot.shopbubu.mapper.CustomerMapper;
@@ -18,9 +20,11 @@ import com.springboot.shopbubu.repository.ProductRepository;
 import com.springboot.shopbubu.security.CustomUserDetails;
 import com.springboot.shopbubu.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -69,7 +73,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDto update(CartDto cartDto) {
-        CartEntity cartEntity = cartRepository.findById(cartDto.getId()).orElseThrow(NoSuchElementException::new);
+        CartEntity cartEntity = cartRepository.findById(cartDto.getId()).orElseThrow(() -> new NotFoundCartException("Not found cart with id :" + cartDto.getId()));
         if (!Objects.equals(cartEntity.getCustomer().getUser().getId(), getIdUserCurrent())) {
             throw new AccessDeniedException("You do not have permission to update this cart.");
         }
@@ -106,7 +110,7 @@ public class CartServiceImpl implements CartService {
             CartProductEntity cartProductEntity = cartProductMapper.convertToCartProductEntity(cartProductDto);
             cartProductEntity.setId(cartProductDto.getProductId());
             cartProductEntity.setCart(cartEntity);
-            ProductEntity productEntity = productRepository.findById(Long.valueOf(cartProductDto.getProductId())).orElseThrow(() -> new NoSuchElementException("Product not found with id: " + cartProductDto.getProductId()));
+            ProductEntity productEntity = productRepository.findById(Long.valueOf(cartProductDto.getProductId())).orElseThrow(() ->   new NotFoundProductException("Product not found"));
             cartProductEntity.setProduct(productEntity);
             cartProductEntity.setCartPrice(productEntity.getPrice().add(BigDecimal.valueOf(cartProductEntity.getQuantity())));
             cartProductEntityList.add(cartProductEntity);

@@ -60,21 +60,30 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(auths -> auths.requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers("/api/v1/category/**").hasAnyAuthority(Role.USER.name(),Role.ADMIN.name())
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auths -> auths
+                        .requestMatchers(WHITE_LIST).permitAll()
+                        .requestMatchers("/api/v1/cart/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers("/api/v1/category/findAll").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())  // cho phép USER xem tất cả các danh mục
+                        .requestMatchers("/api/v1/category/findById/{id}").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers("/api/v1/category/create").hasAuthority(Role.ADMIN.name())  // chỉ ADMIN có thể tạo danh mục
+                        .requestMatchers("/api/v1/category/update").hasAuthority(Role.ADMIN.name())  // chỉ ADMIN có thể cập nhật danh mục
+                        .requestMatchers("/api/v1/category/delete/{id}").hasAuthority(Role.ADMIN.name())  // chỉ ADMIN có thể xóa danh mục
                         .requestMatchers("/api/v1/customer/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
                         .requestMatchers("/api/v1/order/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
-                        .requestMatchers("/api/v1/product/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers("/api/v1/product/findAll").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers("/api/v1/product/findById/{id}").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
+                        .requestMatchers("/api/v1/product/create").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/v1/product/update").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/v1/product/delete/{id}").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/v1/productReview/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // explore SessionCreationPolicy.STATELESS
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(handler -> handler.accessDeniedHandler(accessDeniedHandler))
-                .exceptionHandling(handler -> handler.authenticationEntryPoint(authenticationEntryPoint));
+                .exceptionHandling(handler -> handler
+                        .accessDeniedHandler(accessDeniedHandler)
+                        .authenticationEntryPoint(authenticationEntryPoint));
         return http.build();
     }
-    // thiet lap
 }

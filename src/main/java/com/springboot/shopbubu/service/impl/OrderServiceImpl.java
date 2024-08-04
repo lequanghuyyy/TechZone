@@ -8,6 +8,8 @@ import com.springboot.shopbubu.dto.OrderDto;
 import com.springboot.shopbubu.dto.OrderItemDto;
 import com.springboot.shopbubu.dto.request.PaymentRequest;
 import com.springboot.shopbubu.entity.*;
+import com.springboot.shopbubu.exception.OrderAlreadyShippedException;
+import com.springboot.shopbubu.exception.notFoundException.NotFoundOrderException;
 import com.springboot.shopbubu.mapper.OrderDetailMapper;
 import com.springboot.shopbubu.mapper.OrderItemMapper;
 import com.springboot.shopbubu.mapper.OrderMapper;
@@ -20,9 +22,12 @@ import com.springboot.shopbubu.service.OrderService;
 import com.springboot.shopbubu.utils.SetterToUpdate;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
@@ -90,14 +95,14 @@ public class OrderServiceImpl implements OrderService  {
         return orderRepository
                 .findById(id)
                 .map(orderMapper::convertToOrderDto)
-                .orElseThrow(() -> new NoSuchElementException("Order not found"));
+                .orElseThrow(() -> new NotFoundOrderException("Order not found"));
     }
 
     @Override
     public OrderDto update(OrderDto orderDto) {
-        OrderEntity orderEntity = orderRepository.findById(orderDto.getId()).orElseThrow(() -> new NoSuchElementException("Order not found"));
+        OrderEntity orderEntity = orderRepository.findById(orderDto.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Order not found"));
         if (orderEntity.getOrderStatus() == OrderStatus.SHIPPED) {
-            throw new NoSuchElementException("Order shipped");
+            throw new OrderAlreadyShippedException("Order shipped");
         }
         if (!Objects.equals(orderEntity.getCustomer().getUser().getId(), getIdUserCurrent())) {
             throw new AccessDeniedException("You don't have permission to update this order");

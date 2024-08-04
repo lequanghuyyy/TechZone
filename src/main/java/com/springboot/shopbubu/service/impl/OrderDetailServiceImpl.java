@@ -1,11 +1,14 @@
 package com.springboot.shopbubu.service.impl;
 
 import com.springboot.shopbubu.dto.OrderDetailDto;
+import com.springboot.shopbubu.exception.notFoundException.NotFoundOrderException;
 import com.springboot.shopbubu.mapper.OrderDetailMapper;
 import com.springboot.shopbubu.repository.OrderDetailRepository;
 import com.springboot.shopbubu.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.NoSuchElementException;
 
@@ -26,6 +29,6 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public OrderDetailDto findById(Long id) {
-        return orderDetailRepository.findById(id).map(orderDetailMapper::convertToOrderDetailDto).orElseThrow(NoSuchElementException::new);
+        return orderDetailRepository.findById(id).map(orderDetailMapper::convertToOrderDetailDto).orElseThrow(() -> new NotFoundOrderException("Not Found Order Detail with id" + id));
     }
 }

@@ -2,6 +2,7 @@ package com.springboot.shopbubu.service.impl;
 
 import com.springboot.shopbubu.dto.JwtDto;
 import com.springboot.shopbubu.dto.UserDto;
+import com.springboot.shopbubu.dto.response.TokenResponse;
 import com.springboot.shopbubu.entity.UserEntity;
 import com.springboot.shopbubu.exception.AlreadyExistsException;
 import com.springboot.shopbubu.exception.InvalidCredentialsException;
@@ -11,7 +12,9 @@ import com.springboot.shopbubu.security.CustomUserDetails;
 import com.springboot.shopbubu.security.JwtTokenProvider;
 import com.springboot.shopbubu.service.UserService;
 import com.springboot.shopbubu.dto.response.ResponseUser;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -85,4 +89,15 @@ public class UserServiceImpl implements UserService {
             throw new InvalidCredentialsException("Wrong username or password");
         }
     }
-    }
+
+//    @Override
+//    public TokenResponse refreshToken(HttpServletRequest request) {
+//        String refreshToken = request.getHeader("Refresh-Token");
+//        if (StringUtils.isBlank(refreshToken)) {
+//            throw new InvalidCredentialsException("Refresh Token is empty");
+//        }
+//        final String userName = jwtTokenProvider.extractUsername(refreshToken);
+//        Optional<UserEntity> user = userRepository.findByUsername(userName);
+//        if (!jwt)
+//    }
+}

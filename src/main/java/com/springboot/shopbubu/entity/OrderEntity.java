@@ -50,10 +50,10 @@ public class OrderEntity {
     @Column(name = "sum_price", nullable = false, precision = 19, scale = 4)
     private BigDecimal sumPrice;
 
-    @OneToOne(mappedBy = "orderEntity", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "orderEntity", cascade = CascadeType.ALL,orphanRemoval = true)
     private OrderDetailEntity orderDetails;
 
 
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.EAGER,orphanRemoval = true)
     private List<OrderItemEntity> orderItem;
 }

@@ -23,10 +23,10 @@ public class CustomerEntity  {
     @Column(name = "gender")
     private String gender;
 
-    @OneToOne(mappedBy = "customer",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private CustomerDetailEntity customerDetail;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "used_id", referencedColumnName = "id")
     private UserEntity user;
 

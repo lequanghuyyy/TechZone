@@ -3,13 +3,16 @@ package com.springboot.shopbubu.service.impl;
 import com.springboot.shopbubu.dto.CategoryDto;
 import com.springboot.shopbubu.entity.CategoryEntity;
 import com.springboot.shopbubu.exception.AlreadyExistsException;
+import com.springboot.shopbubu.exception.notFoundException.NotFoundCategoryException;
 import com.springboot.shopbubu.mapper.CategoryMapper;
 import com.springboot.shopbubu.repository.CategoryRepository;
 import com.springboot.shopbubu.service.CategoryService;
 import com.springboot.shopbubu.utils.SetterToUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -37,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto create(CategoryDto categoryDto) {
         if (categoryRepository.findByCategoryName(categoryDto.getCategoryName()) != null) {
-            throw new AlreadyExistsException("Category","CategoryName",categoryDto.getCategoryName());
+            throw new AlreadyExistsException("Category","categoryName","Category existed");
         }
         CategoryEntity categoryEntity = categoryMapper.convertToCategoryEntity(categoryDto);
         categoryRepository.save(categoryEntity);
@@ -47,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto update(CategoryDto categoryDto) {
-        CategoryEntity categoryEntity = categoryRepository.findById(categoryDto.getId()).orElseThrow(() -> new NoSuchElementException("Not found category with id :" + categoryDto.getId()));
+        CategoryEntity categoryEntity = categoryRepository.findById(categoryDto.getId()).orElseThrow(() -> new NotFoundCategoryException("Not found category with id :" + categoryDto.getId()));
         SetterToUpdate.setCategory(categoryDto,categoryEntity);
         categoryRepository.save(categoryEntity);
         return categoryMapper.convertToCategoryDto(categoryEntity);

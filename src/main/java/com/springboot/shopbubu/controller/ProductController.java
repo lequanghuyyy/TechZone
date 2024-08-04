@@ -1,6 +1,8 @@
 package com.springboot.shopbubu.controller;
 
 import com.springboot.shopbubu.dto.ProductDto;
+import com.springboot.shopbubu.dto.paging.PageDto;
+import com.springboot.shopbubu.dto.paging.ProductSearchRequest;
 import com.springboot.shopbubu.dto.response.BaseResponse;
 import com.springboot.shopbubu.dto.response.ResponseFactory;
 import com.springboot.shopbubu.service.ProductService;
@@ -20,8 +22,8 @@ public class ProductController {
     }
     @GetMapping("/findAll")
 
-    public ResponseEntity<BaseResponse<List<ProductDto>>> findAll(){
-            return ResponseFactory.ok(productService.findAll());
+    public ResponseEntity<BaseResponse<PageDto<ProductDto>>> findAll(@RequestBody ProductSearchRequest productSearchRequest){
+            return ResponseFactory.ok(productService.findAll(productSearchRequest));
     }
     @GetMapping("/findById/{id}")
     public ResponseEntity<BaseResponse<ProductDto>> findById(@PathVariable Long id){
